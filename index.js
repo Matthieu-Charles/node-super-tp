@@ -12,7 +12,6 @@ require("dotenv").config();
 const app = express();
 const sequelize = require("./config/database");
 const Bar = require("./models/Bar");
-const Biere = require("./models/Biere");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
