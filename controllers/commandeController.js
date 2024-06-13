@@ -72,19 +72,16 @@ controller.addBiereToCommande = async (req, res) => {
     const { commande_id, biere_id } = req.params;
 
     try {
-        // Vérifier si la commande existe
         const commande = await Commande.findByPk(commande_id);
         if (!commande) {
             return res.status(404).json({ message: 'Commande non trouvée' });
         }
 
-        // Vérifier si la bière existe
         const biere = await Biere.findByPk(biere_id);
         if (!biere) {
             return res.status(404).json({ message: 'Bière non trouvée' });
         }
 
-        // Créer l'association CommandeBiere
         await CommandeBiere.create({ commande_id, biere_id });
 
         return res.status(200).json({ message: 'Bière ajoutée à la commande avec succès' });
@@ -93,6 +90,30 @@ controller.addBiereToCommande = async (req, res) => {
         return res.status(500).json({ message: 'Erreur lors de l\'ajout de la bière à la commande', error });
     }
 };
+
+controller.removeBiereFromCommande = (req, res) => {
+	const { commande_id, biere_id } = req.params;
+	console.log('commande_id:', commande_id);
+	console.log('biere_id:', biere_id);
+  
+	CommandeBiere.destroy({
+	  where: {
+		commande_id: commande_id,
+		biere_id: biere_id,
+	  },
+	})
+	  .then((result) => {
+		if (result === 1) {
+		  return res.status(200).send({ message: "Biere removed from Commande successfully" });
+		} else {
+		  return res.status(404).send({ message: "Biere or Commande not found" });
+		}
+	  })
+	  .catch((error) => {
+		console.error('Error removing Biere from Commande:', error);
+		res.status(400).send({ message: "Failed removing Biere from Commande", error });
+	  });
+  };
 
 
 module.exports = controller

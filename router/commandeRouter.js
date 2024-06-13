@@ -9,6 +9,7 @@ router.put("/commandes/:id", controller.update);
 router.delete("/commandes/:id", controller.delete);
 
 router.post('/commandes/:commande_id/bieres/:biere_id', controller.addBiereToCommande);
+router.delete('/commandes/:commande_id/bieres/:biere_id', controller.removeBiereFromCommande);
 
 
 module.exports = router;
