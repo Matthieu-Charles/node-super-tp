@@ -4,6 +4,8 @@ const router = express.Router();
 
 // Liste des Bars
 router.get("/bars", controller.getAll);
+//List des bières d'un bar
+router.get("/bars/:id_bar/biere", controller.getBieres);
 // Liste le détail d'un Bar
 router.get("/bars/:id", controller.getById);
 // Créer un Bar
@@ -14,11 +16,9 @@ router.post("/bars/:id_bar/biere", controller.createBiereInBar);
 router.put("/bars/:id", controller.update);
 // Supprimer un Bar
 router.delete("/bars/:id", controller.delete);
-
-// Liste des Bieres d'un Bar
-
-// Ajouter une commande à un Bar
-
+//Ajouter une commande à un bar
+router.post("/bars/:id_bar/commandes", controller.addCommandeToBar);
 // Liste des commande d'un bar
+router.get("/bars/:id_bar/commandes", controller.getAllCommandes);
 
 module.exports = router;

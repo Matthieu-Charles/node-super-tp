@@ -1,5 +1,6 @@
 const Bar = require("../models/Bar");
 const Biere = require("../models/Biere");
+const Commande = require("../models/Commande");
 const controller = {};
 
 controller.getAll = (req, res) => {
@@ -9,6 +10,21 @@ controller.getAll = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: "Failed fetching bars", error });
+    });
+};
+
+controller.getBieres = (req, res) => {
+  const id = req.params.id_bar;
+
+  Bar.findByPk(id, { include: ["Bieres"] })
+    .then((bar) => {
+      if (!bar) {
+        return res.send({ message: "Bar not found" });
+      }
+      return res.status(200).send(bar.Bieres);
+    })
+    .catch((error) => {
+      res.status(400).send({ message: "Failed fetching bar", error });
     });
 };
 
@@ -82,6 +98,40 @@ controller.delete = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: "Failed deleting bar", error });
+    });
+};
+
+controller.addCommandeToBar = (req, res) => {
+  const id_Bar = req.params.id_bar;
+  const { name, prix, status } = req.body;
+  const commande = { name, prix, status, BarId: id_Bar };
+
+  Bar.findByPk(id_Bar)
+    .then((bar) => {
+      if (!bar) {
+        return res.send({ message: "Bar not found" });
+      }
+      Commande.create(commande).then(
+        res.status(201).send({ commande, message: "Commande added to Bar! " })
+      );
+    })
+    .catch((error) => {
+      res.status(400).send({ message: "Failed fetching bar", error });
+    });
+};
+
+controller.getAllCommandes = (req, res) => {
+  const id = req.params.id_bar;
+
+  Bar.findByPk(id, { include: ["Commandes"] })
+    .then((bar) => {
+      if (!bar) {
+        return res.send({ message: "Bar not found" });
+      }
+      return res.status(200).send(bar.Commandes);
+    })
+    .catch((error) => {
+      res.status(400).send({ message: "Failed fetching bar", error });
     });
 };
 
