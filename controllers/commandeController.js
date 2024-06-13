@@ -1,9 +1,12 @@
 const Commande = require("../models/Commande")
+const Biere = require("../models/Biere")
+const CommandeBiere = require("../models/CommandeBiere")
 
 const controller = {}
 
 controller.getAll = (req, res) => {
-	Commande.findAll()
+	Commande.findAll({include : [{model : Biere , through: CommandeBiere}],
+	})
 	.then( (commandes) => {
 		return res.send(commandes)
 	}).catch((error) => {
@@ -62,6 +65,34 @@ controller.delete = (req, res) => {
 		res.status(400).send({message : "Failed deleting commande", error})
 	})
 }
+
+
+
+controller.addBiereToCommande = async (req, res) => {
+    const { commande_id, biere_id } = req.params;
+
+    try {
+        // Vérifier si la commande existe
+        const commande = await Commande.findByPk(commande_id);
+        if (!commande) {
+            return res.status(404).json({ message: 'Commande non trouvée' });
+        }
+
+        // Vérifier si la bière existe
+        const biere = await Biere.findByPk(biere_id);
+        if (!biere) {
+            return res.status(404).json({ message: 'Bière non trouvée' });
+        }
+
+        // Créer l'association CommandeBiere
+        await CommandeBiere.create({ commande_id, biere_id });
+
+        return res.status(200).json({ message: 'Bière ajoutée à la commande avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout de la bière à la commande :', error);
+        return res.status(500).json({ message: 'Erreur lors de l\'ajout de la bière à la commande', error });
+    }
+};
 
 
 module.exports = controller

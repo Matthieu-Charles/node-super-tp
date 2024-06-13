@@ -20,14 +20,6 @@ const Commande = db.define('Commande', {
       min: 0
     }
   },
-//   bars_id: {
-//     type: DataTypes.INTEGER,
-//     allowNull: false,
-//     references: {
-//       model: 'Bar', 
-//       key: 'id'
-//     }
-//   },
   date: {
     type: sequelize.DATE,
     allowNull: false,
