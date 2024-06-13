@@ -32,10 +32,6 @@ const Biere = db.define('Biere', {
 		min: 0
 	}
 },
-// bars_id: {
-// 	type: sequelize.INTEGER,
-// 	allowNull: false
-// }
 }, 
 {
 tableName: 'Biere',
