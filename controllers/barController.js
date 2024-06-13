@@ -1,4 +1,5 @@
 const Bar = require("../models/Bar");
+const Biere = require("../models/Biere");
 const controller = {};
 
 controller.getAll = (req, res) => {
@@ -26,7 +27,7 @@ controller.getById = (req, res) => {
     });
 };
 
-controller.create = (req, res) => {
+controller.createBar = (req, res) => {
   const { name, adresse, tel, email, description } = req.body;
   const bar = { name, adresse, tel, email, description };
 
@@ -36,6 +37,25 @@ controller.create = (req, res) => {
     })
     .catch((error) => {
       res.status(400).send({ message: "Failed creating bar", error });
+    });
+};
+
+controller.createBiereInBar = (req, res) => {
+  const id = req.params.id_bar;
+  const { name, description, degree, prix } = req.body;
+  const biere = { name, description, degree, prix, BarId: id };
+
+  Bar.findByPk(id)
+    .then((bar) => {
+      if (!bar) {
+        return res.send({ message: "Bar not found" });
+      }
+      Biere.create(biere).then(
+        res.status(201).send({ biere, message: "Biere added to Bar! " })
+      );
+    })
+    .catch((error) => {
+      res.status(400).send({ message: "Failed fetching bar", error });
     });
 };
 
