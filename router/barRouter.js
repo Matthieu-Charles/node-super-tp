@@ -21,7 +21,7 @@ router.post("/bars/:id_bar/commandes", controller.addCommandeToBar);
 // Liste des commande d'un bar
 router.get("/bars/:id_bar/commandes", controller.getAllCommandes);
 
-// Afficher les Commandes d'un Bar par Date
+// Afficher les Commandes d'un Bar par Date -> Ne marche pas
 router.get('/bars/:id_bar/commandes/date', controller.getBarCommandesByDate);
 // Récupère les commandes avec un prix entre prix_min et prix_max
 router.get('/bars/:id_bar/commandes/prix', controller.getBarCommandesByPrix);
@@ -38,7 +38,7 @@ router.get("/bars/:id_bar/degree", controller.getAverageBeerDegree);
 // Degré d'alcool moyen des bières d'un bar avec un prix compris entre 10 et 20
 router.get("/bars/:id_bar/degree", controller.getAverageBeerDegreeInRange);
 
-
+// Liste des commandes d'un bar à une date donnée avec un prix compris entre 10 et 20
 router.get("/bars/:id_bar/commandes/prix", controller.getCommandesByDateAndPriceRange);
 
 module.exports = router;
