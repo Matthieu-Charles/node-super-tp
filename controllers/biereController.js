@@ -2,16 +2,6 @@ const Biere = require("../models/Biere");
 
 const controller = {};
 
-controller.getAll = (req, res) => {
-  Biere.findAll()
-    .then((bieres) => {
-      return res.send(bieres);
-    })
-    .catch((error) => {
-      res.status(400).send({ message: "Failed fetching bieres", error });
-    });
-};
-
 controller.getById = (req, res) => {
   const id = req.params.id;
 
@@ -27,18 +17,6 @@ controller.getById = (req, res) => {
     });
 };
 
-controller.create = (req, res) => {
-  const { name, description, degree, prix } = req.body;
-  const biere = { name, description, degree, prix };
-
-  Biere.create(biere)
-    .then((biere) => {
-      return res.status(201).send({ biere, message: "Biere created !" });
-    })
-    .catch((error) => {
-      res.status(400).send({ message: "Failed creating biere", error });
-    });
-};
 
 controller.update = (req, res) => {
   const id = req.params.id;

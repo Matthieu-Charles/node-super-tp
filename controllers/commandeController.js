@@ -4,15 +4,6 @@ const CommandeBiere = require("../models/CommandeBiere")
 
 const controller = {}
 
-controller.getAll = (req, res) => {
-	Commande.findAll({include : [{model : Biere , through: CommandeBiere}],
-	})
-	.then( (commandes) => {
-		return res.send(commandes)
-	}).catch((error) => {
-		res.status(400).send({message : "Failed fetching commandes", error})
-	})
-}
 
 controller.getById = (req, res) => {
 	const id = req.params.id
