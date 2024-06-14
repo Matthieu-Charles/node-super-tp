@@ -15,9 +15,8 @@ const Biere = db.define(
     },
     description: {
       type: sequelize.TEXT,
-      allowNull: false,
+      allowNull: true,
       validate: {
-        notNull: true,
         len: [3, 255],
       },
     },

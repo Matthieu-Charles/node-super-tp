@@ -17,7 +17,6 @@ controller.getById = (req, res) => {
     });
 };
 
-
 controller.update = (req, res) => {
   const id = req.params.id;
   const { name, description, degree, prix } = req.body;
