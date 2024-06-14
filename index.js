@@ -7,7 +7,6 @@ const Commande = require("./models/Commande");
 const Biere = require("./models/Biere");
 const CommandeBiere = require("./models/CommandeBiere");
 
-const db = require("./config/database");
 require("dotenv").config();
 const app = express();
 const sequelize = require("./config/database");
@@ -43,18 +42,6 @@ Bar.hasMany(Biere, {
   hooks: true,
 });
 Biere.belongsTo(Bar);
-
-// Synchronisation des modèles avec la base de données
-db.sync()
-  .then(() => {
-    console.log("Base de données synchronisée");
-  })
-  .catch((error) => {
-    console.error(
-      "Erreur lors de la synchronisation de la base de données :",
-      error
-    );
-  });
 
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`app listening on port ${process.env.SERVER_PORT}`);
