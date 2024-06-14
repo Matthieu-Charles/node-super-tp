@@ -21,4 +21,13 @@ router.post("/bars/:id_bar/commandes", controller.addCommandeToBar);
 // Liste des commande d'un bar
 router.get("/bars/:id_bar/commandes", controller.getAllCommandes);
 
+// Afficher les Commandes d'un Bar par Date
+router.get('/bars/:id_bar/commandes/date', controller.getBarCommandesByDate);
+// Récupère les commandes avec un prix entre prix_min et prix_max
+router.get('/bars/:id_bar/commandes/prix', controller.getBarCommandesByPrix);
+
+// Liste des Bars par Ville
+router.get("/bars/ville/:ville", controller.getBarsByVille);
+
+
 module.exports = router;

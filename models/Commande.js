@@ -22,8 +22,7 @@ const Commande = db.define(
     },
     date: {
       type: sequelize.DATEONLY,
-      allowNull: false,
-      defaultValue: sequelize.NOW,
+      allowNull: false
     },
     status: {
       type: sequelize.STRING,
