@@ -29,5 +29,16 @@ router.get('/bars/:id_bar/commandes/prix', controller.getBarCommandesByPrix);
 // Liste des Bars par Ville
 router.get("/bars/ville/:ville", controller.getBarsByVille);
 
+// Liste des Bars par Name
+router.get("/bars/name/:name", controller.getBarByName);
+
+// Degré d'alcool moyen des bières d'un bar
+router.get("/bars/:id_bar/degree", controller.getAverageBeerDegree);
+
+// Degré d'alcool moyen des bières d'un bar avec un prix compris entre 10 et 20
+router.get("/bars/:id_bar/degree", controller.getAverageBeerDegreeInRange);
+
+
+router.get("/bars/:id_bar/commandes/prix", controller.getCommandesByDateAndPriceRange);
 
 module.exports = router;

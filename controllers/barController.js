@@ -3,7 +3,7 @@ const Biere = require("../models/Biere");
 const Commande = require("../models/Commande");
 const controller = {};
 const moment = require("moment");
-const { Op } = require("sequelize")
+const { Op, Sequelize } = require("sequelize")
 
 controller.getAll = (req, res) => {
   Bar.findAll()
@@ -239,6 +239,160 @@ controller.getBarsByVille = (req, res) => {
       res.status(400).send({ message: "Failed fetching bars by ville", error });
     });
 };
+
+
+controller.getBarByName = (req, res) => {
+  const { name } = req.params;
+
+  if (!name) {
+    return res.status(400).send({ message: "Parameter 'name' is required." });
+  }
+
+  Bar.findOne({
+    where: {
+      name: {
+        [Op.substring]: name, // Utilisation de Op.substring pour une recherche insensible à la casse
+      },
+    },
+  })
+    .then((bar) => {
+      if (!bar) {
+        return res.status(404).send({ message: "Bar not found." });
+      }
+      return res.status(200).send(bar);
+    })
+    .catch((error) => {
+      console.error("Failed fetching bar by name:", error);
+      res.status(400).send({ message: "Failed fetching bar by name", error });
+    });
+};
+
+
+controller.getAverageBeerDegree = (req, res) => {
+  const { id_bar } = req.params;
+
+  if (!id_bar) {
+    return res.status(400).send({ message: "Parameter 'id_bar' is required." });
+  }
+
+  Bar.findByPk(id_bar, {
+    include: {
+      model: Biere,
+      attributes: [[Sequelize.fn("AVG", Sequelize.col("degree")), "average_degree"]],
+    },
+  })
+    .then((bar) => {
+      if (!bar) {
+        return res.status(404).send({ message: "Bar not found." });
+      }
+
+      // La moyenne degré est retourné comme `average_degree`
+      const averageDegree = bar.Bieres.length > 0 ? bar.Bieres[0].get("average_degree") : null;
+
+      return res.status(200).send({ average_degree: averageDegree });
+    })
+    .catch((error) => {
+      console.error("Failed fetching average beer degree:", error);
+      res.status(400).send({ message: "Failed fetching average beer degree", error });
+    });
+};
+
+
+controller.getAverageBeerDegreeInRange = (req, res) => {
+  const { id_bar } = req.params;
+  const { prix_min, prix_max } = req.query;
+
+  if (!id_bar) {
+    return res.status(400).send({ message: "Parameter 'id_bar' is required." });
+  }
+
+  if (!prix_min || !prix_max) {
+    return res.status(400).send({ message: "Parameters 'prix_min' and 'prix_max' are required." });
+  }
+
+  const minPrice = parseFloat(prix_min);
+  const maxPrice = parseFloat(prix_max);
+
+  if (isNaN(minPrice) || isNaN(maxPrice)) {
+    return res.status(400).send({ message: "Parameters 'prix_min' and 'prix_max' must be valid numbers." });
+  }
+
+  Bar.findByPk(id_bar, {
+    include: {
+      model: Biere,
+      where: {
+        prix: {
+          [Op.between]: [minPrice, maxPrice],
+        },
+      },
+      attributes: [[Sequelize.fn("AVG", Sequelize.col("degree")), "average_degree"]],
+    },
+  })
+    .then((bar) => {
+      if (!bar) {
+        return res.status(404).send({ message: "Bar not found." });
+      }
+
+      const averageDegree = bar.Bieres.length > 0 ? bar.Bieres[0].get("average_degree") : null;
+
+      return res.status(200).send({ average_degree: averageDegree });
+    })
+    .catch((error) => {
+      console.error("Failed fetching average beer degree in range:", error);
+      res.status(400).send({ message: "Failed fetching average beer degree in range", error });
+    });
+};
+
+controller.getCommandesByDateAndPriceRange = (req, res) => {
+  const { id_bar } = req.params;
+  const { date, prix_min, prix_max } = req.query;
+
+  if (!id_bar) {
+    return res.status(400).send({ message: "Parameter 'id_bar' is required." });
+  }
+
+  if (!date || !moment(date, "YYYY-MM-DD", true).isValid()) {
+    return res.status(400).send({ message: "Parameter 'date' must be provided in 'YYYY-MM-DD' format." });
+  }
+
+  if (!prix_min || !prix_max) {
+    return res.status(400).send({ message: "Parameters 'prix_min' and 'prix_max' are required." });
+  }
+
+  const minPrice = parseFloat(prix_min);
+  const maxPrice = parseFloat(prix_max);
+
+  if (isNaN(minPrice) || isNaN(maxPrice)) {
+    return res.status(400).send({ message: "Parameters 'prix_min' and 'prix_max' must be valid numbers." });
+  }
+
+  Bar.findByPk(id_bar, {
+    include: {
+      model: Commande,
+      where: {
+        date: {
+          [Op.eq]: date,
+        },
+        prix: {
+          [Op.between]: [minPrice, maxPrice],
+        },
+      },
+    },
+  })
+    .then((bar) => {
+      if (!bar) {
+        return res.status(404).send({ message: "Bar not found." });
+      }
+
+      const commandes = bar.Commandes;
+      return res.status(200).send(commandes);
+    })
+    .catch((error) => {
+      console.error("Failed fetching commandes by date and price range:", error);
+      res.status(400).send({ message: "Failed fetching commandes by date and price range", error });
+    });
+};
+
 
 
 
