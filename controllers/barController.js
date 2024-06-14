@@ -44,8 +44,8 @@ controller.getById = (req, res) => {
 };
 
 controller.createBar = (req, res) => {
-  const { name, adresse, tel, email, description } = req.body;
-  const bar = { name, adresse, tel, email, description };
+  const { name, adresse, ville, tel, email, description } = req.body;
+  const bar = { name, adresse, ville, tel, email, description };
 
   Bar.create(bar)
     .then((bar) => {
