@@ -7,6 +7,7 @@ const Bar = db.define(
     id: { type: sequelize.INTEGER, primaryKey: true, autoIncrement: true },
     name: {
       type: sequelize.STRING,
+      unique: true,
       allowNull: false,
       validate: {
         notNull: true,
@@ -16,14 +17,14 @@ const Bar = db.define(
     },
     adresse: {
       type: sequelize.STRING,
-      allowNull: true,
+      allowNull: false,
       validate: {
         len: [3, 255],
       },
     },
     ville: {
       type: sequelize.STRING,
-      allowNull: true,
+      allowNull: false,
       validate: {
         len: [1, 50],
       },

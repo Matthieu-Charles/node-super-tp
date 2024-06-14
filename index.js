@@ -22,15 +22,26 @@ Commande.belongsToMany(Biere, {
   through: CommandeBiere,
   foreignKey: "commande_id",
 });
+
 Biere.belongsToMany(Commande, {
   through: CommandeBiere,
   foreignKey: "biere_id",
+  onDelete: "CASCADE",
+  hooks: true,
 });
 
-Bar.hasMany(Commande);
+Bar.hasMany(Commande, {
+  onDelete: "CASCADE",
+  hooks: true,
+  onDelete: "CASCADE",
+  hooks: true,
+});
 Commande.belongsTo(Bar);
 
-Bar.hasMany(Biere);
+Bar.hasMany(Biere, {
+  onDelete: "CASCADE",
+  hooks: true,
+});
 Biere.belongsTo(Bar);
 
 // Synchronisation des modèles avec la base de données
