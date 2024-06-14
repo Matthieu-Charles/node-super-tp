@@ -3,10 +3,11 @@ const express = require("express");
 
 const router = express.Router();
 
-router.get("/bieres", controller.getAll);
+// Détail d'une Biere
 router.get("/bieres/:id", controller.getById);
-router.post("/bieres", controller.create);
+// Modifier une Biere
 router.put("/bieres/:id", controller.update);
+//Supprimer une Biere
 router.delete("/bieres/:id", controller.delete);
 
 module.exports = router;
